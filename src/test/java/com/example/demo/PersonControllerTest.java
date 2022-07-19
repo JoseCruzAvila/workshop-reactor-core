@@ -69,6 +69,8 @@ public class PersonControllerTest {
 
     @Test
     void get() {
+        when(repository.findById("1")).thenReturn(Mono.just(new Person()));
+
         webTestClient.get()
                 .uri("/person/1")
                 .exchange()
@@ -82,7 +84,10 @@ public class PersonControllerTest {
 
     @Test
     void update() {
-        var request = Mono.just(new Person());
+        Person person = new Person();
+        when(repository.findById(person.getId())).thenReturn(Mono.just(new Person()));
+
+        var request = Mono.just(person);
         webTestClient.put()
                 .uri("/person")
                 .body(request, Person.class)
@@ -93,6 +98,8 @@ public class PersonControllerTest {
 
     @Test
     void delete() {
+        when(repository.findById("1")).thenReturn(Mono.just(new Person()));
+
         webTestClient.delete()
                 .uri("/person/1")
                 .exchange()
